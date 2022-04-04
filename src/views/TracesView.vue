@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <TraceViewer msg="Welcome to Your Vue.js App"/>
+    <TraceViewer/>
   </div>
 </template>
 

@@ -3,7 +3,12 @@ import TracesView from '../views/TracesView.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/traces/:experiment',
+    name: 'traces',
+    component: TracesView
+  },
+  {
+    path: '/traces',
     name: 'home',
     component: TracesView
   }

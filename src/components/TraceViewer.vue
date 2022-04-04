@@ -1,22 +1,26 @@
 <template>
     <div id="trace-viewer">
-        <h1 id="appia-title">Appia</h1>
+        <div id="appia-title">
+            <h1>Appia</h1>
+            <h2
+            v-if="$route.params.experiment"
+            >Currently viewing {{experimentList}}</h2>
+        </div>
         <SidebarPanel/>
     </div>
 </template>
 
 <script>
 import SidebarPanel from '@/components/SidebarPanel.vue'
-import {store} from '@/store.js'
 
 export default {
-    data() {
-        return {
-            store
-        }
-    },
     components: {
         SidebarPanel
+    },
+    computed: {
+        experimentList() {
+            return this.$route.params.experiment.replaceAll('+', ', ');
+        }
     }
 }
 </script>
@@ -37,4 +41,10 @@ export default {
     grid-area: header;
     margin: auto;
 }
+
+#appia-title > h1, #appia-title > h2 {
+    margin: 0;
+    text-align: center;
+}
+
 </style>

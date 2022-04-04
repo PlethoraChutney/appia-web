@@ -22,7 +22,6 @@ export default {
     },
     data() {
         return {
-            value: null,
             options: [
                 'test1',
                 'test2',
