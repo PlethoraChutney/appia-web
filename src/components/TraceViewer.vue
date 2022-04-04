@@ -3,8 +3,8 @@
         <div id="appia-title">
             <h1>Appia</h1>
             <h2
-            v-if="$route.params.experiment"
-            >Currently viewing {{experimentList}}</h2>
+            v-if="store.currentExperimentList.length !== 0"
+            >Currently viewing {{store.currentExperimentList.join(', ')}}</h2>
         </div>
         <SidebarPanel/>
     </div>
@@ -12,15 +12,16 @@
 
 <script>
 import SidebarPanel from '@/components/SidebarPanel.vue'
+import {store} from '@/store.js'
 
 export default {
+    data() {
+        return {
+            store
+        }
+    },
     components: {
         SidebarPanel
-    },
-    computed: {
-        experimentList() {
-            return this.$route.params.experiment.replaceAll('+', ', ');
-        }
     }
 }
 </script>

@@ -1,5 +1,9 @@
 import {reactive} from 'vue'
 
 export const store = reactive({
-    currentExperimentList: []
+    currentExperimentList: [],
+    expListLoaded: false,
+    setExpList(experimentList) {
+        this.currentExperimentList = experimentList;
+    }
 })

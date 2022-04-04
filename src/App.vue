@@ -2,6 +2,49 @@
   <router-view/>
 </template>
 
+<script>
+import {store} from './store.js'
+export default {
+  data() {
+    return {
+      store
+    }
+  },
+  created() {
+      // hacky way to wait until router has finished reading
+      // everything in
+      window.setTimeout(() => {
+          this.store.setExpList(this.$route.params.experiment.split('+'));
+          this.store.expListLoaded = true;
+      }, 200)
+  },
+  computed: {
+    storedExpPath() {
+      return this.store.currentExperimentList.join('+');
+    }
+  },
+  watch: {
+    storedExpPath(newPath) {
+      if (newPath !== this.$route.params.experiment && this.store.expListLoaded) {
+        
+        if (newPath.length > 0) {
+          this.$router.push({
+            name: 'traces',
+            params: {
+              experiment: newPath
+            }
+          })
+        } else {
+          this.$router.push({
+            name: 'home'
+          })
+        }
+      }
+    }
+  }
+}
+</script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins&family=Zilla+Slab:wght@500&display=swap');
 

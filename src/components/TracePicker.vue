@@ -2,7 +2,7 @@
     <div id="trace-picker">
         <Multiselect
         id="trace-multiselect"
-        v-model="value"
+        v-model="this.store.currentExperimentList"
         :options="options"
         :mode="`multiple`"
         :searchable="true"
@@ -15,6 +15,7 @@
 
 <script>
 import Multiselect from '@vueform/multiselect'
+import {store} from '@/store.js'
 
 export default {
     components: {
@@ -22,6 +23,8 @@ export default {
     },
     data() {
         return {
+            store,
+            experimentsSelected: null,
             options: [
                 'test1',
                 'test2',
