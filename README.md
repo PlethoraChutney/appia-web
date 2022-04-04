@@ -1,4 +1,8 @@
-# appia-web
+# Appia Web
+
+Rewrite of the web interface for Appia. Using Vue will make things much
+more flexible. More importantly, it will untangle the disgusting mess
+that the web app currently is, and separate the server from the frontend.
 
 ## Project setup
 ```
