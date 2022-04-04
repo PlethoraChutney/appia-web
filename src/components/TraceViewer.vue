@@ -1,12 +1,12 @@
 <template>
     <div id="trace-viewer">
         <h1 id="appia-title">Appia</h1>
-        <TracePicker/>
+        <SidebarPanel/>
     </div>
 </template>
 
 <script>
-import TracePicker from '@/components/TracePicker.vue'
+import SidebarPanel from '@/components/SidebarPanel.vue'
 import {store} from '@/store.js'
 
 export default {
@@ -16,7 +16,7 @@ export default {
         }
     },
     components: {
-        TracePicker
+        SidebarPanel
     }
 }
 </script>
