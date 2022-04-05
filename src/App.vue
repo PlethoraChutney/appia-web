@@ -64,6 +64,7 @@ body {
   width: 100vw;
   font-family: 'Poppins', sans-serif;
   font-size: 12pt;
+  background-color: #FFEE8F;
 }
 
 h1, h2, h3, h4 {

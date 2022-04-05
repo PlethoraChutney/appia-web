@@ -42,6 +42,9 @@ export default {
 <style scoped>
     #trace-picker {
         width: 90%;
+        --ms-option-bg-pointed: #FFEE8F;
+        --ms-option-bg-selected: #7D72F7;
+        --ms-option-bg-selected-pointed: #372CAB;
     }
 
     #trace-multiselect > input {

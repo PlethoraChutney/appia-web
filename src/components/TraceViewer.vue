@@ -2,10 +2,10 @@
     <div id="trace-viewer">
         <div id="appia-title">
             <h1>Appia</h1>
-            <h2
+            <p
             v-if="store.currentExperimentList.length !== 0 && store.currentExperimentList[0] !== ''"
-            >Currently viewing {{store.currentExperimentList.join(', ')}}</h2>
-            <h2 v-else>Pick an experiment below to start</h2>
+            >Currently viewing {{store.currentExperimentList.join(', ')}}</p>
+            <p v-else>Pick an experiment below to start</p>
         </div>
         <SidebarPanel/>
     </div>
@@ -31,12 +31,20 @@ export default {
 #trace-viewer {
     display: grid;
     height: 100%;
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
     grid-template-rows: min-content auto;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas: 
         "header header header"
         "sidebar main main"
     ;
+    gap: 1em;
+    background-color: #FFFEFA;
+    border-radius: 10px;
+    border: 6px solid #F7E372;
+    padding: 20px;
 }
 
 #appia-title {
