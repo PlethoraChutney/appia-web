@@ -37,19 +37,12 @@ export default {
   watch: {
     'store.currentExperimentList'(newValue) {
       if (newValue.join('+') !== this.$route.params.experiment && this.store.expListLoaded) {
-      
-        if (newValue.length > 0) {
-          this.$router.push({
-            name: 'traces',
-            params: {
-              experiment: newValue.join('+')
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'home'
-          })
-        }
+        this.$router.push({
+          name: 'traces',
+          params: {
+            experiment: newValue.join('+')
+          }
+        })
       }
     },
     '$route.params.experiment'(newValue = '') {
