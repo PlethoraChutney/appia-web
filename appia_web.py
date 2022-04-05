@@ -1,6 +1,7 @@
 import couchdb
 import os
 import pandas as pd
+import json
 from flask import Flask, render_template, request
 
 class Database:
@@ -62,9 +63,21 @@ class Database:
         return {'hplc': combined_hplc, 'fplc': combined_fplc}
         
 
-if __name__ == '__main__':
-    db = Database()
-    print(db.pull_experiment('HPLC-tests'))
-    print(db.pull_multiple_experiments(['HPLC-tests', 'test']))
+app = Flask(
+    __name__,
+    static_folder=os.path.join('dist', 'static'),
+    template_folder='dist'
+)
 
-    
+db = Database()
+
+@app.route('/', methods = ['GET'])
+def index():
+    return render_template('index.html')
+
+@app.route('/api', methods = ['POST'])
+def api():
+    rj = request.get_json()
+
+    if rj['action'] == 'get_experiment_list':
+        return json.dumps(db.experiment_list), 200, {'ContentType': 'application/json'}

@@ -4,6 +4,22 @@
 
 <script>
 import {store} from './store.js'
+
+export function sendRequest(body, dest = '/api') {
+    return fetch(dest, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(body)
+    })
+}
+
 export default {
   data() {
     return {

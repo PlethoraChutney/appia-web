@@ -16,6 +16,7 @@
 <script>
 import Multiselect from '@vueform/multiselect'
 import {store} from '@/store.js'
+import {sendRequest} from '@/App.vue'
 
 export default {
     components: {
@@ -25,12 +26,14 @@ export default {
         return {
             store,
             experimentsSelected: null,
-            options: [
-                'test1',
-                'test2',
-                'test3'
-            ]
+            options: []
         }
+    },
+    mounted() {
+        sendRequest({'action': 'get_experiment_list'})
+        .then(request => request.json()).then(data => {
+            this.options = data
+        })
     }
 }
 </script>

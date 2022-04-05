@@ -13,8 +13,7 @@ const routes = [
   },
   {
     path: '/traces',
-    name: 'home',
-    component: TracesView
+    redirect: '/traces'
   }
 ]
 
