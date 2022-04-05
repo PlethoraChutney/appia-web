@@ -7,7 +7,7 @@ const routes = [
     redirect: '/traces'
   },
   {
-    path: '/traces/:experiment',
+    path: '/traces/:experiment?',
     name: 'traces',
     component: TracesView
   },

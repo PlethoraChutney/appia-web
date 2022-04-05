@@ -36,7 +36,7 @@ export default {
         }
       }
     },
-    '$route.params.experiment'(newValue) {
+    '$route.params.experiment'(newValue = '') {
       if (newValue !== this.store.currentExperimentList) {
         this.store.setExpList(newValue.split('+'))
       }
