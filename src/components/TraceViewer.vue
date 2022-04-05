@@ -5,6 +5,7 @@
             <h2
             v-if="store.currentExperimentList.length !== 0"
             >Currently viewing {{store.currentExperimentList.join(', ')}}</h2>
+            <h2 v-else>Pick an experiment below to start</h2>
         </div>
         <SidebarPanel/>
     </div>

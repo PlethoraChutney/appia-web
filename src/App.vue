@@ -18,20 +18,15 @@ export default {
           this.store.expListLoaded = true;
       }, 200)
   },
-  computed: {
-    storedExpPath() {
-      return this.store.currentExperimentList.join('+');
-    }
-  },
   watch: {
-    storedExpPath(newPath) {
-      if (newPath !== this.$route.params.experiment && this.store.expListLoaded) {
-        
-        if (newPath.length > 0) {
+    'store.currentExperimentList'(newValue) {
+      if (newValue.join('+') !== this.$route.params.experiment && this.store.expListLoaded) {
+      
+        if (newValue.length > 0) {
           this.$router.push({
             name: 'traces',
             params: {
-              experiment: newPath
+              experiment: newValue.join('+')
             }
           })
         } else {
@@ -39,6 +34,11 @@ export default {
             name: 'home'
           })
         }
+      }
+    },
+    '$route.params.experiment'(newValue) {
+      if (newValue !== this.store.currentExperimentList) {
+        this.store.setExpList(newValue.split('+'))
       }
     }
   }
