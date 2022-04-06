@@ -4,6 +4,22 @@ import pandas as pd
 import json
 from flask import Flask, render_template, request
 
+def convert_to_columns(df: pd.DataFrame):
+    to_return = {}
+    for col in df.columns:
+        if col != 'index':
+            to_return[col] = list(df[col])
+    return to_return
+
+
+def prepare_for_transmission(df_dict):
+    if df_dict['hplc'] is not None:
+        df_dict['hplc'] = convert_to_columns(df_dict['hplc'])
+    if df_dict['fplc'] is not None:
+        df_dict['fplc'] = convert_to_columns(df_dict['fplc'])
+
+    return df_dict
+
 class Database:
     def __init__(self) -> None:
         host = os.environ['COUCHDB_HOST']
@@ -55,17 +71,18 @@ class Database:
         try:
             combined_hplc = pd.concat(
                 [x['hplc'] for x in exp_dicts if x['hplc'] is not None]
-            ).reset_index().to_json(orient="split", index = False)
-        except ValueError:
+            ).reset_index()
+        except ValueError as e:
             combined_hplc = None
         try:
             combined_fplc = pd.concat(
                 [x['fplc'] for x in exp_dicts if x['fplc'] is not None]
-            ).reset_index().to_json(orient="split", index = False)
-        except ValueError:
+            ).reset_index()
+        except ValueError as e:
             combined_fplc = None
 
         return {'hplc': combined_hplc, 'fplc': combined_fplc}
+
 
 
 app = Flask(
@@ -89,4 +106,5 @@ def api():
         return json.dumps(db.experiment_list), 200, {'ContentType': 'application/json'}
 
     elif rj['action'] == 'get_experiment_json':
-        return json.dumps(db.pull_multiple_experiments(rj['id_list'])), 200, {'ContentType': 'application/json'}
+        combined_dict = db.pull_multiple_experiments(rj['id_list'])
+        return json.dumps(prepare_for_transmission(combined_dict)), 200, {'ContentType': 'application/json'}
