@@ -57,9 +57,12 @@ export default {
     getExperimentJSON(idList) {
       sendRequest({'action': 'get_experiment_json', 'id_list': idList})
       .then(response => response.json()).then(data => {
-        this.store.hplcDataFrame = new DataFrame(data['hplc']);
-        this.store.hplcDataFrame.print();
-        this.store.fplcDataFrame = new DataFrame(data['fplc']);
+        if (data.hplc) {
+          this.store.hplcDataFrame = new DataFrame(data['hplc']);
+        }
+        if (data.fplc) {
+          this.store.fplcDataFrame = new DataFrame(data['fplc']);
+        }
       })
     }
   }
@@ -72,7 +75,7 @@ export default {
 body {
   padding: 0;
   margin: 0;
-  height: 100vh;
+  height: max-content;
   width: 100vw;
   font-family: 'Poppins', sans-serif;
   font-size: 12pt;
