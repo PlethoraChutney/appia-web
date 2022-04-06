@@ -14,6 +14,12 @@ def convert_to_columns(df: pd.DataFrame):
 
 def prepare_for_transmission(df_dict):
     if df_dict['hplc'] is not None:
+        df_dict['hplc'] = df_dict['hplc'].pivot_table(
+            index = ['mL', 'Channel', 'Time', 'Normalization'],
+            columns = 'Sample',
+            values = 'Value'
+        ).reset_index()
+        
         df_dict['hplc'] = convert_to_columns(df_dict['hplc'])
     if df_dict['fplc'] is not None:
         df_dict['fplc'] = convert_to_columns(df_dict['fplc'])
@@ -59,11 +65,11 @@ class Database:
         return trace_dict
 
     def pull_multiple_experiments(self, id_list):
-        
+        app.logger.debug(id_list)
         exp_dicts = []
         for id in id_list:
             exp = self.pull_experiment(id)
-            if exp['hplc'] is not None:
+            if exp['hplc'] is not None and len(id_list) > 1:
                 exp['hplc']['Sample'] = f'{id}: ' + exp['hplc']['Sample']
 
             exp_dicts.append(exp)
