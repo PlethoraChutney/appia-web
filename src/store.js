@@ -5,5 +5,6 @@ export const store = reactive({
     expListLoaded: false,
     setExpList(experimentList) {
         this.currentExperimentList = experimentList;
-    }
+    },
+    currentDataJSON: null
 })

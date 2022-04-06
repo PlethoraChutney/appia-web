@@ -43,6 +43,7 @@ class Database:
         return trace_dict
 
     def pull_multiple_experiments(self, id_list):
+        
         exp_dicts = []
         for id in id_list:
             exp = self.pull_experiment(id)
@@ -50,18 +51,22 @@ class Database:
                 exp['hplc']['Sample'] = f'{id}: ' + exp['hplc']['Sample']
 
             exp_dicts.append(exp)
-
+            
         try:
-            combined_hplc = pd.concat([x['hplc'] for x in exp_dicts if x['hplc'] is not None])
+            combined_hplc = pd.concat(
+                [x['hplc'] for x in exp_dicts if x['hplc'] is not None]
+            ).reset_index().to_json(orient="split", index = False)
         except ValueError:
             combined_hplc = None
         try:
-            combined_fplc = pd.concat([x['fplc'] for x in exp_dicts if x['fplc'] is not None])
+            combined_fplc = pd.concat(
+                [x['fplc'] for x in exp_dicts if x['fplc'] is not None]
+            ).reset_index().to_json(orient="split", index = False)
         except ValueError:
             combined_fplc = None
 
         return {'hplc': combined_hplc, 'fplc': combined_fplc}
-        
+
 
 app = Flask(
     __name__,
@@ -77,7 +82,11 @@ def index():
 
 @app.route('/api', methods = ['POST'])
 def api():
+    global db
     rj = request.get_json()
 
     if rj['action'] == 'get_experiment_list':
         return json.dumps(db.experiment_list), 200, {'ContentType': 'application/json'}
+
+    elif rj['action'] == 'get_experiment_json':
+        return json.dumps(db.pull_multiple_experiments(rj['id_list'])), 200, {'ContentType': 'application/json'}

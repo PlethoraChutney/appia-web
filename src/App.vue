@@ -42,13 +42,22 @@ export default {
           params: {
             experiment: newValue.join('+')
           }
-        })
+        });
+        this.getExperimentJSON(newValue);
       }
     },
     '$route.params.experiment'(newValue = '') {
       if (newValue !== this.store.currentExperimentList) {
-        this.store.setExpList(newValue.split('+'))
+        this.store.setExpList(newValue.split('+'));
       }
+    }
+  },
+  methods: {
+    getExperimentJSON(idList) {
+      sendRequest({'action': 'get_experiment_json', 'id_list': idList})
+      .then(response => response.json()).then(data => {
+        this.store.currentDataJSON = data;
+      })
     }
   }
 }
