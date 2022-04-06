@@ -4,6 +4,7 @@
 
 <script>
 import {store} from './store.js'
+import {DataFrame} from 'danfojs'
 
 export function sendRequest(body, dest = '/api') {
     return fetch(dest, {
@@ -56,7 +57,9 @@ export default {
     getExperimentJSON(idList) {
       sendRequest({'action': 'get_experiment_json', 'id_list': idList})
       .then(response => response.json()).then(data => {
-        this.store.currentDataJSON = data;
+        this.store.hplcDataFrame = new DataFrame(data['hplc']);
+        this.store.hplcDataFrame.print();
+        this.store.fplcDataFrame = new DataFrame(data['fplc']);
       })
     }
   }
