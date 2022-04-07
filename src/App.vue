@@ -59,6 +59,7 @@ export default {
       .then(response => response.json()).then(data => {
         if (data.hplc) {
           this.store.hplcDataFrame = new DataFrame(data['hplc']);
+          console.log(this.store.hplcDataFrame);
         }
         if (data.fplc) {
           this.store.fplcDataFrame = new DataFrame(data['fplc']);

@@ -8,11 +8,13 @@
             <p v-else>Pick an experiment below to start</p>
         </div>
         <SidebarPanel/>
+        <PlotPanel/>
     </div>
 </template>
 
 <script>
 import SidebarPanel from '@/components/SidebarPanel.vue'
+import PlotPanel from '@/components/PlotPanel.vue'
 import {store} from '@/store.js'
 
 export default {
@@ -22,7 +24,8 @@ export default {
         }
     },
     components: {
-        SidebarPanel
+        SidebarPanel,
+        PlotPanel
     }
 }
 </script>
