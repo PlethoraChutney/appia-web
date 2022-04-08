@@ -9,10 +9,9 @@
     "dev": "vue-cli-service build --mode development"
   },
   "dependencies": {
+    "@observablehq/plot": "^0.4.2",
     "@vueform/multiselect": "^2.3.3",
     "core-js": "^3.8.3",
-    "danfojs": "^1.1.0",
-    "plotly.js-dist": "^2.11.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
   },

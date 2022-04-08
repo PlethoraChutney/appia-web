@@ -9,5 +9,5 @@ export const store = reactive({
     hplcSamples: null,
     hplcDataRaw: null,
     hplcDataNorm: null,
-    fplcDataFrame: null
+    fplcData: null
 })

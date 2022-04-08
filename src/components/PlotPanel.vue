@@ -1,6 +1,6 @@
 <template>
     <div id="plot-panel">
-        <div class="plot">
+        <div id="raw-plot-container" class="plot">
             <h2>Signal</h2>
             <div id="hplc-raw-plot" class="plot">
             </div>
@@ -10,7 +10,7 @@
 
 <script>
 import {store} from '@/store.js'
-import Plotly from 'plotly.js-dist'
+import * as Plot from "@observablehq/plot";
 
 export default {
     data() {
@@ -18,27 +18,31 @@ export default {
             store
         }
     },
+    mounted() {
+        let newPlot = Plot.plot({
+                    marks: [
+                        Plot.line({'test': [1, 2, 3], 'ytest': [2, 3, 4], 'color': ['red', 'red', 'red']},
+                        {x: 'test', y: 'ytest', stroke: 'color'}
+                    )]
+                });
+
+        document.getElementById('hplc-raw-plot').appendChild(newPlot);
+    },
     watch: {
         'store.hplcDataRaw'() {
-            let hplcData = [];
-            this.store.hplcSamples.forEach(e => {
-                hplcData.push({
-                    type: 'scatter',
-                    mode: 'lines',
-                    x: store.hplcDataRaw.mL,
-                    y: store.hplcDataRaw[e]
-                })
+            let newPlot = Plot.plot({
+                marks: [
+                    Plot.line(store.hplcDataRaw, {
+                        x: 'mL',
+                        y: 'Signal',
+                        stroke: 'Sample'
+                    })
+                ]
             })
 
-            let layout = [];
-
-            let config = {responsive: true};
-            Plotly.newPlot(
-                'hplc-raw-plot',
-                hplcData,
-                layout,
-                config
-            )
+            let plotContainer = document.getElementById('raw-plot-container');
+            plotContainer.removeChild(plotContainer.lastChild);
+            plotContainer.appendChild(newPlot);
         }
     }
 }

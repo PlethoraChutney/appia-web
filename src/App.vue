@@ -20,6 +20,28 @@ export function sendRequest(body, dest = '/api') {
     })
 }
 
+function stackWideDataframe(semiwide, samples) {
+  let channelArray = semiwide.Channel;
+  let timeArray = semiwide.Time;
+  let volumeArray = semiwide.mL;
+  let returnDf = {
+    'Channel': [],
+    'Time': [],
+    'mL': [],
+    'Sample': [],
+    'Signal': []
+  }
+  for (const sample of samples) {
+    returnDf['Channel'].push(...channelArray);
+    returnDf['Time'].push(...timeArray);
+    returnDf['mL'].push(...volumeArray);
+    returnDf['Sample'].push(...Array(semiwide[sample].length).fill(sample));
+    returnDf['Signal'].push(...semiwide[sample]);
+  }
+
+  return returnDf;
+}
+
 export default {
   data() {
     return {
@@ -57,9 +79,8 @@ export default {
       sendRequest({'action': 'get_experiment_json', 'id_list': idList})
       .then(response => response.json()).then(data => {
         if (data.hplc_raw) {
-          this.store.hplcSamples = data['hplc_samples'];
-          this.store.hplcDataRaw = data['hplc_raw'];
-          this.store.hplcDataNorm = data['hplc_norm'];
+          this.store.hplcDataRaw = stackWideDataframe(data['hplc_raw'], data['hplc_samples']);
+          this.store.hplcDataNorm = stackWideDataframe(data['hplc_norm'], data['hplc_samples']);
         }
         if (data.fplc) {
           this.store.fplcData = data['fplc'];
