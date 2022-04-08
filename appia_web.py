@@ -13,18 +13,32 @@ def convert_to_columns(df: pd.DataFrame):
 
 
 def prepare_for_transmission(df_dict):
+    return_dict = {}
+
     if df_dict['hplc'] is not None:
-        df_dict['hplc'] = df_dict['hplc'].pivot_table(
+        hplc = df_dict['hplc'].pivot_table(
             index = ['mL', 'Channel', 'Time', 'Normalization'],
             columns = 'Sample',
             values = 'Value'
         ).reset_index()
         
-        df_dict['hplc'] = convert_to_columns(df_dict['hplc'])
-    if df_dict['fplc'] is not None:
-        df_dict['fplc'] = convert_to_columns(df_dict['fplc'])
+        return_dict['hplc_raw'] = convert_to_columns(
+            hplc.loc[hplc['Normalization'] == 'Signal'].drop('Normalization', axis = 1)
+        )
+        return_dict['hplc_norm'] = convert_to_columns(
+            hplc.loc[hplc['Normalization'] == 'Normalized'].drop('Normalization', axis = 1)
+        )
+    else:
+        return_dict['hplc_raw'] = None
+        return_dict['hplc_norm'] = None
 
-    return df_dict
+    if df_dict['fplc'] is not None:
+        return_dict['fplc'] = convert_to_columns(df_dict['fplc'])
+    else:
+        return_dict['fplc'] = None
+
+
+    return return_dict
 
 class Database:
     def __init__(self) -> None:

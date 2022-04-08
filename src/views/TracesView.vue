@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" style="width: 100%;">
     <TraceViewer/>
   </div>
 </template>

@@ -34,7 +34,7 @@ export default {
 #trace-viewer {
     display: grid;
     height: 100%;
-    width: 100%;
+    width: 90%;
     max-width: 1400px;
     margin: auto;
     grid-template-rows: min-content auto;

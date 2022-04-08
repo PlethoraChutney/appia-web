@@ -21,10 +21,13 @@ export default {
     computed: {
         hplcSignalDF() {
             if (this.store.hplcDataFrame) {
-                return this.store.hplcDataFrame.query({
-                    "column": "Normalization",
-                    "is": "==",
-                    "to": "Signal"
+                let signalRows = []
+                this.store.hplcDataFrame["Normalized"].forEach(
+                    e => signalRows.push(e === 'Signal')
+                );
+
+                return this.store.hplcDataFrame.loc({
+                    rows: signalRows
                 })
             } else {
                 return null

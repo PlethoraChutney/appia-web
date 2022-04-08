@@ -6,6 +6,7 @@ export const store = reactive({
     setExpList(experimentList) {
         this.currentExperimentList = experimentList;
     },
-    hplcDataFrame: null,
+    hplcDataRaw: null,
+    hplcDataNorm: null,
     fplcDataFrame: null
 })
