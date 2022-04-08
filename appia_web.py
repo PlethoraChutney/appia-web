@@ -16,6 +16,7 @@ def prepare_for_transmission(df_dict):
     return_dict = {}
 
     if df_dict['hplc'] is not None:
+        return_dict['hplc_samples'] = list(pd.unique(df_dict['hplc']['Sample']))
         hplc = df_dict['hplc'].pivot_table(
             index = ['mL', 'Channel', 'Time', 'Normalization'],
             columns = 'Sample',
@@ -29,6 +30,7 @@ def prepare_for_transmission(df_dict):
             hplc.loc[hplc['Normalization'] == 'Normalized'].drop('Normalization', axis = 1)
         )
     else:
+        return_dict['hplc_samples'] = None
         return_dict['hplc_raw'] = None
         return_dict['hplc_norm'] = None
 

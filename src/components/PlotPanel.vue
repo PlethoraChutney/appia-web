@@ -1,8 +1,8 @@
 <template>
     <div id="plot-panel">
-        <div id="raw-plot">
+        <div class="plot">
             <h2>Signal</h2>
-            <div id="hplc-raw-plot">
+            <div id="hplc-raw-plot" class="plot">
             </div>
         </div>
     </div>
@@ -10,7 +10,7 @@
 
 <script>
 import {store} from '@/store.js'
-import {toJSON} from "danfojs"
+import Plotly from 'plotly.js-dist'
 
 export default {
     data() {
@@ -18,26 +18,27 @@ export default {
             store
         }
     },
-    computed: {
-        hplcSignalDF() {
-            if (this.store.hplcDataFrame) {
-                let signalRows = []
-                this.store.hplcDataFrame["Normalized"].forEach(
-                    e => signalRows.push(e === 'Signal')
-                );
-
-                return this.store.hplcDataFrame.loc({
-                    rows: signalRows
-                })
-            } else {
-                return null
-            }
-        }
-    },
     watch: {
-        hplcSignalDF() {
-            let data = toJSON(this.hplcSignalDF)
-            console.log(data)
+        'store.hplcDataRaw'() {
+            let hplcData = [];
+            this.store.hplcSamples.forEach(e => {
+                hplcData.push({
+                    type: 'scatter',
+                    mode: 'lines',
+                    x: store.hplcDataRaw.mL,
+                    y: store.hplcDataRaw[e]
+                })
+            })
+
+            let layout = [];
+
+            let config = {responsive: true};
+            Plotly.newPlot(
+                'hplc-raw-plot',
+                hplcData,
+                layout,
+                config
+            )
         }
     }
 }
@@ -50,5 +51,9 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+}
+
+.plot {
+    width: 100%;
 }
 </style>

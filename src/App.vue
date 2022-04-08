@@ -57,9 +57,8 @@ export default {
       sendRequest({'action': 'get_experiment_json', 'id_list': idList})
       .then(response => response.json()).then(data => {
         if (data.hplc_raw) {
+          this.store.hplcSamples = data['hplc_samples'];
           this.store.hplcDataRaw = data['hplc_raw'];
-        }
-        if (data.hplc_norm) {
           this.store.hplcDataNorm = data['hplc_norm'];
         }
         if (data.fplc) {
