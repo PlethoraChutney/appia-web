@@ -22,23 +22,26 @@ def prepare_for_transmission(df_dict):
             columns = 'Sample',
             values = 'Value'
         ).reset_index()
+
+        split_dfs = {}
+        split_dfs['Signal'] = hplc.loc[hplc['Normalization'] == 'Signal'].drop('Normalization', axis = 1)
+        split_dfs['Normalized'] = hplc.loc[hplc['Normalization'] == 'Normalized'].drop('Normalization', axis = 1)
+        channels = list(pd.unique(split_dfs['Signal']['Channel']))
+
+        return_dict['Signal'] = {}
+        return_dict['Normalized'] = {}
         
-        return_dict['hplc_raw'] = convert_to_columns(
-            hplc.loc[hplc['Normalization'] == 'Signal'].drop('Normalization', axis = 1)
-        )
-        return_dict['hplc_norm'] = convert_to_columns(
-            hplc.loc[hplc['Normalization'] == 'Normalized'].drop('Normalization', axis = 1)
-        )
+        for norm in ['Normalized', 'Signal']:
+            for channel in channels:
+                return_dict[norm][channel] = convert_to_columns(split_dfs[norm].loc[split_dfs[norm]['Channel'] == channel])
+       
     else:
         return_dict['hplc_samples'] = None
-        return_dict['hplc_raw'] = None
-        return_dict['hplc_norm'] = None
 
     if df_dict['fplc'] is not None:
         return_dict['fplc'] = convert_to_columns(df_dict['fplc'])
     else:
         return_dict['fplc'] = None
-
 
     return return_dict
 
