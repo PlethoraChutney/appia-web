@@ -20,27 +20,27 @@ export function sendRequest(body, dest = '/api') {
     })
 }
 
-function stackWideDataframe(semiwide, samples) {
-  let channelArray = semiwide.Channel;
-  let timeArray = semiwide.Time;
-  let volumeArray = semiwide.mL;
-  let returnDf = {
-    'Channel': [],
-    'Time': [],
-    'mL': [],
-    'Sample': [],
-    'Signal': []
-  }
-  for (const sample of samples) {
-    returnDf['Channel'].push(...channelArray);
-    returnDf['Time'].push(...timeArray);
-    returnDf['mL'].push(...volumeArray);
-    returnDf['Sample'].push(...Array(semiwide[sample].length).fill(sample));
-    returnDf['Signal'].push(...semiwide[sample]);
-  }
+// function stackWideDataframe(semiwide, samples) {
+//   let channelArray = semiwide.Channel;
+//   let timeArray = semiwide.Time;
+//   let volumeArray = semiwide.mL;
+//   let returnDf = {
+//     'Channel': [],
+//     'Time': [],
+//     'mL': [],
+//     'Sample': [],
+//     'Signal': []
+//   }
+//   for (const sample of samples) {
+//     returnDf['Channel'].push(...channelArray);
+//     returnDf['Time'].push(...timeArray);
+//     returnDf['mL'].push(...volumeArray);
+//     returnDf['Sample'].push(...Array(semiwide[sample].length).fill(sample));
+//     returnDf['Signal'].push(...semiwide[sample]);
+//   }
 
-  return returnDf;
-}
+//   return returnDf;
+// }
 
 export default {
   data() {
@@ -78,9 +78,14 @@ export default {
     getExperimentJSON(idList) {
       sendRequest({'action': 'get_experiment_json', 'id_list': idList})
       .then(response => response.json()).then(data => {
-        if (data.hplc_raw) {
-          this.store.hplcDataRaw = stackWideDataframe(data['hplc_raw'], data['hplc_samples']);
-          this.store.hplcDataNorm = stackWideDataframe(data['hplc_norm'], data['hplc_samples']);
+        if (data.hplc_channels) {
+          this.store.hplcDataRaw = {channels: data.hplc_channels};
+          for (let channel of data.hplc_channels) {
+            this.store.hplcDataRaw[channel] = {
+              'data': data.Signal[channel].data,
+              'samples': data.Signal[channel].hplc_samples
+            };
+          }
         }
         if (data.fplc) {
           this.store.fplcData = data['fplc'];
@@ -98,7 +103,7 @@ body {
   padding: 0;
   margin: 0;
   height: max-content;
-  width: 100vw;
+  width: 95vw;
   font-family: 'Poppins', sans-serif;
   font-size: 12pt;
   background-color: #FFEE8F;
@@ -118,7 +123,7 @@ h2 {
 
 #app {
   padding: 0;
-  margin: 0;
+  margin: auto;
   height: 100%;
 }
 

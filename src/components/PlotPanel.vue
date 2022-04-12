@@ -1,7 +1,7 @@
 <template>
     <div id="plot-panel">
         <div id="raw-plot-container" class="plot">
-            <h2>Signal</h2>
+            <h2 class="plot-header">Signal</h2>
             <div id="hplc-raw-plot" class="plot">
             </div>
         </div>
@@ -10,7 +10,7 @@
 
 <script>
 import {store} from '@/store.js'
-import * as Plot from "@observablehq/plot";
+import Plotly from 'plotly.js-dist-min'
 
 export default {
     data() {
@@ -18,31 +18,41 @@ export default {
             store
         }
     },
-    mounted() {
-        let newPlot = Plot.plot({
-                    marks: [
-                        Plot.line({'test': [1, 2, 3], 'ytest': [2, 3, 4], 'color': ['red', 'red', 'red']},
-                        {x: 'test', y: 'ytest', stroke: 'color'}
-                    )]
-                });
-
-        document.getElementById('hplc-raw-plot').appendChild(newPlot);
-    },
     watch: {
         'store.hplcDataRaw'() {
-            let newPlot = Plot.plot({
-                marks: [
-                    Plot.line(store.hplcDataRaw, {
-                        x: 'mL',
-                        y: 'Signal',
-                        stroke: 'Sample'
-                    })
-                ]
-            })
 
-            let plotContainer = document.getElementById('raw-plot-container');
-            plotContainer.removeChild(plotContainer.lastChild);
-            plotContainer.appendChild(newPlot);
+            let data = []
+            for (let i = 0; i < this.store.hplcDataRaw.channels.length; i++) {
+                let channel = this.store.hplcDataRaw.channels[i];
+                this.store.hplcDataRaw[channel].samples.forEach(sample => {
+                    let trace = {
+                        x: this.store.hplcDataRaw[channel].data.Time,
+                        y: this.store.hplcDataRaw[channel].data[sample],
+                        name: sample,
+                        type: 'scatter'
+                    };
+                    if (i > 0) {
+                        trace['xaxis'] = `x${i+1}`;
+                        trace['yaxis'] = `y${i+1}`;
+                    }
+                    data.push(trace);
+                })
+            }
+
+            let layout = {
+                grid: {
+                    rows: 2,
+                    columns: 1,
+                    pattern: 'independent'
+                }
+            };
+
+            let config = {
+                displaylogo: false,
+                responsive: true
+            }
+
+            Plotly.newPlot('hplc-raw-plot', data, layout, config);
         }
     }
 }
@@ -59,5 +69,9 @@ export default {
 
 .plot {
     width: 100%;
+}
+
+.plot-header {
+    text-align: center;
 }
 </style>

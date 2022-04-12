@@ -16,7 +16,6 @@ def prepare_for_transmission(df_dict):
     return_dict = {}
 
     if df_dict['hplc'] is not None:
-        return_dict['hplc_samples'] = list(pd.unique(df_dict['hplc']['Sample']))
         hplc = df_dict['hplc'].pivot_table(
             index = ['mL', 'Channel', 'Time', 'Normalization'],
             columns = 'Sample',
@@ -26,14 +25,17 @@ def prepare_for_transmission(df_dict):
         split_dfs = {}
         split_dfs['Signal'] = hplc.loc[hplc['Normalization'] == 'Signal'].drop('Normalization', axis = 1)
         split_dfs['Normalized'] = hplc.loc[hplc['Normalization'] == 'Normalized'].drop('Normalization', axis = 1)
-        channels = list(pd.unique(split_dfs['Signal']['Channel']))
+        return_dict['hplc_channels'] = list(pd.unique(split_dfs['Signal']['Channel']))
 
         return_dict['Signal'] = {}
         return_dict['Normalized'] = {}
         
         for norm in ['Normalized', 'Signal']:
-            for channel in channels:
-                return_dict[norm][channel] = convert_to_columns(split_dfs[norm].loc[split_dfs[norm]['Channel'] == channel])
+            for channel in return_dict['hplc_channels']:
+                return_dict[norm][channel] = {}
+                channel_df = split_dfs[norm].loc[split_dfs[norm]['Channel'] == channel]
+                return_dict[norm][channel]['hplc_samples'] = list(channel_df.columns)[3:]
+                return_dict[norm][channel]['data'] = convert_to_columns(channel_df)
        
     else:
         return_dict['hplc_samples'] = None
